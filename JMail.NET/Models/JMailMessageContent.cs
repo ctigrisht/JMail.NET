@@ -12,6 +12,6 @@ namespace JMail.NET.Models
         public string Footer = string.Empty;
         public string Message = string.Empty;
         public bool EnableHtml = true;
-        public string[] Files = new string[0];
+        public JMailMessageFile[] Files = new JMailMessageFile[0];
     }
 }

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace JMail.NET.Models
 {
-    public record JMailLetter
+    public record JMailLetterOpened
     {
         public string Sender = string.Empty;
         public string Recipient = string.Empty;
-        public string EncryptedContent = string.Empty;
+        public DateTime DateReceived;
+        public DateTime DateOpened;
+        [NotNull] public JMailMessage Message { get; set; }
     }
-
-
 }
