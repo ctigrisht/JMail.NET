@@ -10,4 +10,8 @@
     <ProjectReference Include="..\JMail.NET\JMail.NET.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

@@ -29,7 +29,9 @@ namespace JMail.NET.Lib
 
         public static string GetRsaPublicKey() => _publicKeyEncoded;
 
-        public static JMailMessage Decrypt(string message) => JsonSerializer.Deserialize<JMailMessage>(_decrypt(message));
+        public static string Decrypt(string data) => _decrypt(data);
+        //public static JMailMessage Decrypt(string encryptedContent) => JsonSerializer.Deserialize<JMailMessage>(_decrypt(encryptedContent));
+        //public static JMailMessage Decrypt(this JMailLetter letter) => JsonSerializer.Deserialize<JMailMessage>(letter.EncryptedContent);
         public static string Encrypt(JMailMessage message, string publicKey) => _encrypt(JsonSerializer.Serialize(message), publicKey);
 
         private static string _encrypt(string data, string publicKey)

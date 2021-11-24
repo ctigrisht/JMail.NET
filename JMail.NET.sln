@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JMail.NET", "JMail.NET\JMail.NET.csproj", "{1BCB5FBF-9CA2-4F6B-BAF8-98D1DCCAF440}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JMail.NET", "JMail.NET\JMail.NET.csproj", "{1BCB5FBF-9CA2-4F6B-BAF8-98D1DCCAF440}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JMail.Router", "JMail.Router\JMail.Router.csproj", "{85FF0977-DAE2-484B-A75F-D89A209AF607}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JMail.Relay", "JMail.Router\JMail.Relay.csproj", "{85FF0977-DAE2-484B-A75F-D89A209AF607}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
