@@ -7,36 +7,31 @@ using System.Threading.Tasks;
 
 namespace JMail.NET.Models
 {
+
     public record JMailMessage
     {
-        public JMailMessageSender Sender = null;
-        public JMailMessageReceiver Receiver = null;
-        public JMailMessageContent Content = null;
-        public DateTime Date = DateTime.MinValue;
+        [NotNull] public JMailMessageSender Sender { get; set; }
+        [NotNull] public JMailMessageRecipient Recepient { get; set; }
+        [NotNull] public JMailMessageContent Content { get; set; }
+        [NotNull] public DateTime Date { get; set; }
+        
         /// <summary>
         /// 0 is highest priority
         /// </summary>
-        public short MessagePriority = 10;
+        public short MessagePriority { get; set; } = 10;
 
     }
 
-    public class JMailMessageContent
-    {
-        /// <summary>
-        /// Supports HTML format
-        /// </summary>
-        public string Message = string.Empty;
-        public string[] Files = new string[0];
-    }
 
-    public class JMailMessageSender
+
+    public record JMailMessageSender
     {
         public string IPAddress = string.Empty;
         public string Domain = string.Empty;
         public string User = string.Empty;
     }
 
-    public class JMailMessageReceiver
+    public record JMailMessageRecipient
     {
         public string Domain = string.Empty;
         public string User = string.Empty;
