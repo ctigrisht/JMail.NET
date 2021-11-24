@@ -62,8 +62,16 @@ namespace JMail.NET.Lib
 
     }
 
+    [Serializable]
     public class JMailEncryptionException : Exception
     {
+        public JMailEncryptionException() : base() { }
+        public JMailEncryptionException(string message) : base(message) { }
+        public JMailEncryptionException(string message, Exception inner) : base(message, inner) { }
 
+        // A constructor is needed for serialization when an
+        // exception propagates from a remoting server to the client.
+        protected JMailEncryptionException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }
