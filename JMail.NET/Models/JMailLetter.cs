@@ -9,7 +9,17 @@ namespace JMail.NET.Models
 {
     public record JMailLetter
     {
-        public JMailLetter(string recipient, string sender, string header, string message, string footer, string name = null, bool html = true, JMailMessageFile[]? files = null, short priority = 10)
+        public JMailLetter(
+            string recipient, 
+            string sender, 
+            string header, 
+            string message, 
+            string footer, 
+            
+            string name = null, 
+            bool html = true, 
+            JMailMessageFile[]? files = null, 
+            short priority = 10)
         {
             var senderSplit = sender.Split('#');
             var recipientSplit = recipient.Split('#');
@@ -56,7 +66,8 @@ namespace JMail.NET.Models
 
         public string Sender = string.Empty;
         public string Recipient = string.Empty;
-        public DateTime DateReceived;
+        public DateTime Date;
+        public short Priority = 10;
         public JMailMessage Message = null;
     }
 }

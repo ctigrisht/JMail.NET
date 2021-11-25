@@ -22,7 +22,7 @@ namespace JMail.NET.Lib
                 //decrypt letter
                 JMailLetter decrypted = new JMailLetter();
 
-                decrypted.DateReceived = letter.DateSent;
+                decrypted.Date = letter.DateSent;
                 decrypted.Recipient = Encryption.Decrypt(letter.Recipient);
                 decrypted.Sender = Encryption.Decrypt(letter.Sender);
                 decrypted.Message = JsonSerializer.Deserialize<JMailMessage>(Encryption.Decrypt(letter.EncryptedContent));
@@ -45,35 +45,69 @@ namespace JMail.NET.Lib
 
         public static async Task<JMailLetterSendResult> SendMail(JMailLetter letter, short priority)
         {
-            JMailLetterEncrypted encrypted = new JMailLetterEncrypted();
             if (!RelayData.Domains.Contains(letter.Origin)) return new JMailLetterSendResult
             {
                 Message = $"This relay does not support the domain '{letter.Origin}'",
                 Valid = false
-            };;
+            };
 
             //get the PRIMARY IP for TXT record of the domain
             var address = DnsQuery.GetPrimaryAddressFromDomain(letter.Target);
             
             //get public key of relay to encrypt
             var publicKey = await _getServerPublicKey(address);
+            if (publicKey is null) return new JMailLetterSendResult
+            {
+                Message = "The target does not have a valid public key",
+                Valid = false
+            };
 
             //encrypt the letter
-            encrypted.Sender = Encryption.Encrypt(letter.Sender, publicKey);
-            encrypted.Recipient = Encryption.Encrypt(letter.Recipient, publicKey);
-            encrypted.EncryptedContent = Encryption.Encrypt(letter.Message, publicKey);
-            
-            encrypted.Origin = letter.Origin;
-            encrypted.DateSent = DateTime.UtcNow;
+            var encrypted = new JMailLetterEncrypted
+            {
+                Origin = letter.Origin,
 
+                Priority = letter.Priority,
+                DateSent = DateTime.UtcNow,
 
+                Sender = Encryption.Encrypt(letter.Sender, publicKey),
+                Recipient = Encryption.Encrypt(letter.Recipient, publicKey),
+                EncryptedContent = Encryption.Encrypt(letter.Message, publicKey),
+            };
 
-            return default;
+            return await _postLetter(encrypted, address);
         }
 
-        private static async Task<JMailLetterSendResult> _postLetter(JMailLetterEncrypted letter)
+        private static async Task<JMailLetterSendResult> _postLetter(JMailLetterEncrypted letter, RelayAddress address)
         {
+            try
+            {
+                using var content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    {"letter", JsonSerializer.Serialize(letter)}
+                });
+                using var response = await _httpClient.PostAsync($"http://{address.Address}:{address.Port}/jmailctl/relay/mail", content);
 
+                if (!response.IsSuccessStatusCode) return new JMailLetterSendResult
+                {
+                    Message = $"The server did not accept the mail, error: {await response.Content.ReadAsStringAsync()}",
+                    Valid = false
+                };
+
+                return new JMailLetterSendResult
+                {
+                    Message = String.Empty,
+                    Valid = true
+                };
+            }
+            catch (Exception e)
+            {
+                return new JMailLetterSendResult
+                {
+                    Message = "An error has occured",
+                    Valid = false
+                };
+            }
         }
 
         private static async Task<string> _getServerPublicKey(RelayAddress address)
