@@ -33,6 +33,7 @@ namespace JMail.NET.Lib
         //public static JMailMessage Decrypt(string encryptedContent) => JsonSerializer.Deserialize<JMailMessage>(_decrypt(encryptedContent));
         //public static JMailMessage Decrypt(this JMailLetter letter) => JsonSerializer.Deserialize<JMailMessage>(letter.EncryptedContent);
         public static string Encrypt(JMailMessage message, string publicKey) => _encrypt(JsonSerializer.Serialize(message), publicKey);
+        public static string Encrypt(string message, string publicKey) => _encrypt(message, publicKey);
 
         private static string _encrypt(string data, string publicKey)
         {

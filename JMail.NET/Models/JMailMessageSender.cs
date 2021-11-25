@@ -8,8 +8,8 @@ namespace JMail.NET.Models
 {
     public record JMailMessageSender
     {
-        public string IPAddress = string.Empty;
         public string Domain = string.Empty;
         public string User = string.Empty;
+        public string Name = string.Empty;
     }
 }

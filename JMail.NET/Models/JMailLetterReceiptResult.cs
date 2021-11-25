@@ -9,6 +9,13 @@ namespace JMail.NET.Models
     public record JMailLetterReceiptResult
     {
         public bool Valid = false;
-        public JMailLetterDecrypted Letter = null; 
+        public string Message = string.Empty;
+        public JMailLetter Letter = null; 
+    }
+
+    public record JMailLetterSendResult
+    {
+        public bool Valid = false;
+        public string Message = string.Empty;
     }
 }

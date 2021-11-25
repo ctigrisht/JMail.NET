@@ -11,15 +11,8 @@ namespace JMail.NET.Models
     public record JMailMessage
     {
         [NotNull] public JMailMessageSender Sender { get; set; }
-        [NotNull] public JMailMessageRecipient Recepient { get; set; }
+        [NotNull] public JMailMessageRecipient Recipient { get; set; }
         [NotNull] public JMailMessageContent Content { get; set; }
-        [NotNull] public DateTime Date { get; set; }
-        
-        /// <summary>
-        /// 0 is highest priority
-        /// </summary>
-        public short MessagePriority { get; set; } = 10;
-
     }
 
 

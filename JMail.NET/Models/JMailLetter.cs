@@ -9,23 +9,54 @@ namespace JMail.NET.Models
 {
     public record JMailLetter
     {
-        /// <summary>
-        /// The letter origin domain name, unencrypted, used for sender verification
-        /// </summary>
+        public JMailLetter(string recipient, string sender, string header, string message, string footer, string name = null, bool html = true, JMailMessageFile[]? files = null, short priority = 10)
+        {
+            var senderSplit = sender.Split('#');
+            var recipientSplit = recipient.Split('#');
+
+            Origin = senderSplit[1];
+            Sender = sender;
+
+            Target = recipientSplit[1];
+            Recipient = recipient;
+
+            Message = new JMailMessage
+            {
+                Sender = new JMailMessageSender
+                {
+                    Name = name ?? senderSplit[0],
+                    User = senderSplit[0],
+                    Domain = senderSplit[1],
+                },
+                Recipient = new JMailMessageRecipient
+                {
+                    User = recipientSplit[0],
+                    Domain = recipientSplit[1],
+                },
+                Content = new JMailMessageContent
+                {
+                    EnableHtml = html,
+                    Files = files ?? new JMailMessageFile[0],
+                    Header = header,
+                    Message = message,
+                    Footer = footer
+                }
+            };
+
+        }
+        public JMailLetter()
+        {
+
+        }
+
+
+
         public string Origin = string.Empty;
-        public DateTime DateSent = DateTime.MinValue;
+        public string Target = string.Empty;
 
-        /// <summary>
-        /// Address format: user#example.com, encrypted on transport
-        /// </summary>
         public string Sender = string.Empty;
-        /// <summary>
-        /// Default address format, encrypted on transport
-        /// </summary>
         public string Recipient = string.Empty;
-        public string EncryptedContent = string.Empty;
-        public short Priority = 10;
+        public DateTime DateReceived;
+        public JMailMessage Message = null;
     }
-
-
 }
