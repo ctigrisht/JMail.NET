@@ -1,5 +1,5 @@
 # JMail.NET (WIP)
-A simple to implement JSON based alternative to Emails.
+A simple to implement JSON based alternative to Emails and SMTP.
 
 ## Setup
 Add a TXT DNS record on your root domain name containing the IP:PORT combination of your Relay
