@@ -1,4 +1,5 @@
-﻿using JMail.NET.Models;
+﻿using JMail.NET.Datastore;
+using JMail.NET.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,71 +13,12 @@ namespace JMail.NET.Lib
     {
         private static HttpClient _httpClient = new HttpClient();
 
-        public static JMailLetterReceiptResult Receive(JMailLetter letter, string ip)
+        
+
+        private static async Task<string> _getServerPublicKey(string ip, int port)
         {
-            try
-            {
-                DnsQuery.VerifyMessageSender(letter.Origin, ip);
-
-                //decrypt letter
-                JMailLetterDecrypted decrypted = new JMailLetterDecrypted();
-
-                decrypted.DateReceived = letter.DateSent;
-                decrypted.Recipient = Encryption.Decrypt(letter.Recipient);
-                decrypted.Sender = Encryption.Decrypt(letter.Sender);
-                decrypted.Message = JsonSerializer.Deserialize<JMailMessage>(Encryption.Decrypt(letter.EncryptedContent));
-
-                return new JMailLetterReceiptResult
-                {
-                    Letter = decrypted,
-                    Valid = true
-                };
-            }
-            catch (UnauthorizedJMailSenderException e)
-            {
-                return new JMailLetterReceiptResult
-                {
-                    Letter = null,
-                    Valid = false
-                };
-            }
-            catch (InvalidJMailAddressException e)
-            {
-                return new JMailLetterReceiptResult
-                {
-                    Letter = null,
-                    Valid = false
-                };
-            }
-            catch (JMailEncryptionException e)
-            {
-                return new JMailLetterReceiptResult
-                {
-                    Letter = null,
-                    Valid = false
-                };
-            }
-            catch (Exception e)
-            {
-                return new JMailLetterReceiptResult
-                {
-                    Letter = null,
-                    Valid = false
-                };
-            }
-        }
-
-        public static async Task<JMailLetterReceiptResult> SendMail(JMailLetter letter)
-        {
-            return default;
-        }
-
-        private static string _getServerPublicKey(string ip)
-        {
-
-
-
-            return default(string);
+            using var response = await _httpClient.PostAsync($"http://{ip}:{port}/api/jmail/info/getkey", null);
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }

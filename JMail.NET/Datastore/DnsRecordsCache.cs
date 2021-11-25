@@ -10,6 +10,19 @@ namespace JMail.NET.Datastore
 {
     public static class DnsRecordsCache
     {
+        static DnsRecordsCache()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(1000 * 60 * 59);
+                    Console.WriteLine("[WORKER][DNS] Purging DNS cache");
+                    Purge();
+                }
+            });
+        }
+
         private static ConcurrentDictionary<string, RelayAddresses> _cache = new ConcurrentDictionary<string, RelayAddresses>();
 
         public static RelayAddresses Get(string domain)

@@ -37,7 +37,7 @@ namespace JMail.NET.Lib
             RelayAddresses addresses = null;
 
             if (DnsRecordsCache.Contains(domain))
-                DnsRecordsCache.Get(domain);
+                addresses = DnsRecordsCache.Get(domain);
             else
             {
                 addresses = _parseTxtRecord(_getTxtRecords(domain));
@@ -46,6 +46,27 @@ namespace JMail.NET.Lib
             if (!_verifyIP(ref addresses, ip)) throw new UnauthorizedJMailSenderException($"'{ip}' is not an authorized relay of '{domain}'");
 
 
+        }
+
+        public static RelayAddress GetPrimaryAddressFromDomain(string domain)
+        {
+            try
+            {
+                RelayAddresses addresses = null;
+
+                if (DnsRecordsCache.Contains(domain))
+                    addresses = DnsRecordsCache.Get(domain);
+                else
+                {
+                    addresses = _parseTxtRecord(_getTxtRecords(domain));
+                    _cacheTxtRecord(domain, addresses);
+                }
+
+                return addresses.Addresses.First();
+            }catch (Exception e)
+            {
+                throw new InvalidJMailTxtRecordException("The TXT record did not contain any valid IP(s)", e);
+            }
         }
 
         private static void _cacheTxtRecord(string domain, RelayAddresses addresses) => DnsRecordsCache.Override(domain, addresses);
@@ -59,28 +80,34 @@ namespace JMail.NET.Lib
 
             foreach (var record in records)
             {
-                var text = record.Text.FirstOrDefault();
-                if (string.IsNullOrWhiteSpace(text)) continue;
-                if (!text.Contains("JMAIL:")) continue;
-
-                found = true;
-                adrs = text.Split('=', StringSplitOptions.RemoveEmptyEntries)[1].Split(',');
-
-                foreach (var value in adrs)
+                try
                 {
-                    var split = value.Split(':');
-                    addresses.Add(new RelayAddress()
-                    {
-                        Address = split[0],
-                        Port = int.Parse(split[1])
-                    });
-                }
+                    var text = record.Text.FirstOrDefault();
+                    if (string.IsNullOrWhiteSpace(text)) continue;
+                    if (!text.Contains("JMAIL:")) continue;
 
+                    found = true;
+                    adrs = text.Split('=', StringSplitOptions.RemoveEmptyEntries)[1].Split(',');
+
+                    foreach (var value in adrs)
+                    {
+                        var split = value.Split(':');
+                        addresses.Add(new RelayAddress()
+                        {
+                            Address = split[0],
+                            Port = int.Parse(split[1])
+                        });
+                    }
+
+                }catch (Exception e)
+                {
+                    throw new InvalidJMailTxtRecordException("The JMAIL TXT record is not valid", e);
+                }
                 //var bak = ret;
                 //ret = new string[0];
                 //foreach (var item in bak)
                 //    ret.Append(item.Trim());
-                    
+
                 break;
             }
             if (!found) throw new TxtRecordNotFoundException($"Valid JMail TXT record was not found");
@@ -107,7 +134,18 @@ namespace JMail.NET.Lib
         protected TxtRecordNotFoundException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
+    [Serializable]
+    public class InvalidJMailTxtRecordException : Exception
+    {
+        public InvalidJMailTxtRecordException() : base() { }
+        public InvalidJMailTxtRecordException(string message) : base(message) { }
+        public InvalidJMailTxtRecordException(string message, Exception inner) : base(message, inner) { }
 
+        // A constructor is needed for serialization when an
+        // exception propagates from a remoting server to the client.
+        protected InvalidJMailTxtRecordException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
     [Serializable]
     public class UnauthorizedJMailSenderException : Exception
     {

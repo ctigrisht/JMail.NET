@@ -9,6 +9,9 @@ namespace JMail.NET.Models
 {
     public record JMailLetterDecrypted
     {
+        public string Origin = string.Empty;
+        public string Target = string.Empty;
+
         public string Sender = string.Empty;
         public string Recipient = string.Empty;
         public DateTime DateReceived;
