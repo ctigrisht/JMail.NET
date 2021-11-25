@@ -3,6 +3,7 @@ using JMail.NET.Lib;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using JMail.NET.Models;
+using JMail.Relay.Hook;
 
 namespace JMail.Relay.Controllers
 {
@@ -28,28 +29,9 @@ namespace JMail.Relay.Controllers
         [HttpPost("mail")]
         public IActionResult Mail([FromForm] JMailLetterEncrypted letter)
         {
-            
-            try
-            {
-                var ip = HttpContext.Request.Host.Host;
-                DnsQuery.VerifyMessageSender(letter.Origin, ip);
+            var ip = HttpContext.Request.Host.Host;
+            var decrypted = letter.Receive(ip);
 
-
-            }
-            catch (UnauthorizedJMailSenderException e)
-            {
-                return BadRequest("Unauthorized Sender");
-            }
-            catch (InvalidJMailAddressException e)
-            {
-                return BadRequest("Invalid Address Format");
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, "An internal server error has occured");
-            }
-
-            
 
             return Ok();
         }

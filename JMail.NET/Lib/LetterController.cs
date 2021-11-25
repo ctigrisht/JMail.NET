@@ -13,7 +13,7 @@ namespace JMail.NET.Lib
     {
         private static HttpClient _httpClient = new HttpClient();
 
-        public static JMailLetterReceiptResult Receive(JMailLetterEncrypted letter, string ip)
+        public static JMailLetterReceiptResult Receive(this JMailLetterEncrypted letter, string ip)
         {
             try
             {

@@ -48,7 +48,7 @@ namespace JMail.NET.Models
                     EnableHtml = html,
                     Files = files ?? new JMailMessageFile[0],
                     Header = header,
-                    Message = message,
+                    Body = message,
                     Footer = footer
                 }
             };
