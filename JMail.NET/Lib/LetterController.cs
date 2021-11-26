@@ -123,9 +123,27 @@ namespace JMail.NET.Lib
             using var response = await _httpClient.PostAsync($"http://{address.Address}:{address.Port}/jmailctl/relay/info", null);
             if (!response.IsSuccessStatusCode) throw new InvalidJMailRelayResponseException("The relay did not respond correctly");
             var data = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-            if (!data.RootElement.TryGetProperty("domains", out var domainsElement)) throw new InvalidJMailRelayResponseException();
+            if (!data.RootElement.TryGetProperty("Domains", out var domainsElement)) throw new InvalidJMailRelayResponseException();
             var domains = domainsElement.Deserialize<string[]>();
             return domains;
+        }
+
+        public static bool ValidateAddress(string address)
+        {
+            try
+            {
+                var count = address.Count(x => x is '#');
+                if (count is 0 || count > 1) return false;
+
+                var split = address.Split('#');
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
         }
     }
 }

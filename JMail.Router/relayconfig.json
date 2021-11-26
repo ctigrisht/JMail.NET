@@ -1,0 +1,18 @@
+{
+  "Database": {
+    "UseDatabase": true,
+    "MongoDbConnectionString": "localhost:27017"
+  },
+
+  "Host": {
+    "IP": "0.0.0.0",
+    "Port": 6051,
+    "Domains": [
+      "example.com"
+    ]
+  },
+  "JMail": {
+    "MaxLetterSize": 100000,
+    "UserHourlySendLimit": 5
+  }
+}

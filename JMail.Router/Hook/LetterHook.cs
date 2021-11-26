@@ -25,6 +25,10 @@ namespace JMail.Relay.Hook
             //
             // Write your logic to handle reception of JMail
             //
+
+            //
+            // The following logic is to save the letter as a database document in mongodb for use by a JMail client
+            //
         }
 
     }

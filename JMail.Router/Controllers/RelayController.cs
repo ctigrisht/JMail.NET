@@ -9,14 +9,15 @@ namespace JMail.Relay.Controllers
 {
     [ApiController]
     [Route("jmailctl/relay")]
-    public class RelayInfoController : ControllerBase
+    public class RelayController : ControllerBase
     {
         [HttpPost("info")]
         public IActionResult Info()
         {
             return Ok(new Dictionary<string, dynamic>
             {
-                {"domains", RelayData.Domains },
+                {"Domains", RelayData.Domains },
+                {"MaxLetterSize", RelayData.MaxLetterSize }
             });
         }
 
@@ -30,8 +31,11 @@ namespace JMail.Relay.Controllers
         public IActionResult Mail([FromForm] JMailLetterEncrypted letter)
         {
             var ip = HttpContext.Request.Host.Host;
-            var decrypted = letter.Receive(ip);
+            var decryptedResult = letter.Receive(ip);
+            var decrypted = decryptedResult.Letter;
 
+            // do something with the letter
+            decrypted.IncomingJMailHandler();
 
             return Ok();
         }
