@@ -4,7 +4,7 @@ namespace JMail.Relay.Lib
 {
     public class Db
     {
-        public static MongoClient Client = new MongoClient();
-
+        public static MongoClient Client;
+        public static void NewClient(string connectionString) => Client = new MongoClient(connectionString);
     }
 }

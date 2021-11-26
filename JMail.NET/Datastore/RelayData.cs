@@ -16,7 +16,7 @@ namespace JMail.NET.Datastore
         /// </summary>
         public static RelayAddress Address = new RelayAddress()
         {
-            Address = "123.456.789.123",
+            IP = "123.456.789.123",
             Port = 6051
         };
 

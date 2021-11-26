@@ -24,7 +24,7 @@ namespace JMail.NET.Models
 
     public record RelayAddress
     {
-        public string Address { get; set; }
+        public string IP { get; set; }
         public int Port { get; set; }
     }
 }

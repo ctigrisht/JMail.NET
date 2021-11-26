@@ -86,7 +86,7 @@ namespace JMail.NET.Lib
                 {
                     {"letter", JsonSerializer.Serialize(letter)}
                 });
-                using var response = await _httpClient.PostAsync($"http://{address.Address}:{address.Port}/jmailctl/relay/mail", content);
+                using var response = await _httpClient.PostAsync($"http://{address.IP}:{address.Port}/jmailctl/relay/mail", content);
 
                 if (!response.IsSuccessStatusCode) return new JMailLetterSendResult
                 {
@@ -112,7 +112,7 @@ namespace JMail.NET.Lib
 
         private static async Task<string> _getServerPublicKey(RelayAddress address)
         {
-            using var response = await _httpClient.PostAsync($"http://{address.Address}:{address.Port}/jmailctl/relay/getkey", null);
+            using var response = await _httpClient.PostAsync($"http://{address.IP}:{address.Port}/jmailctl/relay/getkey", null);
             if (!response.IsSuccessStatusCode) return null;
             
             return await response.Content.ReadAsStringAsync();
@@ -120,7 +120,7 @@ namespace JMail.NET.Lib
 
         private static async Task<string[]> _getServerAuthroizedDomains(RelayAddress address)
         {
-            using var response = await _httpClient.PostAsync($"http://{address.Address}:{address.Port}/jmailctl/relay/info", null);
+            using var response = await _httpClient.PostAsync($"http://{address.IP}:{address.Port}/jmailctl/relay/info", null);
             if (!response.IsSuccessStatusCode) throw new InvalidJMailRelayResponseException("The relay did not respond correctly");
             var data = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
             if (!data.RootElement.TryGetProperty("Domains", out var domainsElement)) throw new InvalidJMailRelayResponseException();

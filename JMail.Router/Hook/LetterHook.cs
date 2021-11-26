@@ -27,9 +27,16 @@ namespace JMail.Relay.Hook
             //
 
             //
-            // The following logic is to save the letter as a database document in mongodb for use by a JMail client
+            // The following logic saves the letter as a database document in mongodb for use by a JMail client
             //
+
+
         }
 
+
+        private static void _saveLetterToMongoDB(JMailLetter letter)
+        {
+
+        }
     }
 }

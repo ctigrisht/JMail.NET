@@ -14,5 +14,8 @@
   "JMail": {
     "MaxLetterSize": 100000,
     "UserHourlySendLimit": 5
+  },
+  "Security": {
+    "AESKey": "tempkey123"
   }
 }

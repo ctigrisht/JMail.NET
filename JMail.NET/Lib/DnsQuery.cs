@@ -70,7 +70,7 @@ namespace JMail.NET.Lib
         }
 
         private static void _cacheTxtRecord(string domain, RelayAddresses addresses) => DnsRecordsCache.Override(domain, addresses);
-        private static bool _verifyIP(ref RelayAddresses addresses, string ip) => addresses.Addresses.Any(x => x.Address == ip);
+        private static bool _verifyIP(ref RelayAddresses addresses, string ip) => addresses.Addresses.Any(x => x.IP == ip);
 
         private static RelayAddresses _parseTxtRecord(IEnumerable<TxtRecord> records)
         {
@@ -94,7 +94,7 @@ namespace JMail.NET.Lib
                         var split = value.Split(':');
                         addresses.Add(new RelayAddress()
                         {
-                            Address = split[0],
+                            IP = split[0],
                             Port = int.Parse(split[1])
                         });
                     }
